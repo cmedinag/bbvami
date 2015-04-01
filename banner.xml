@@ -1,1 +1,101 @@
+<Module>
+  <ModulePrefs title="Banner" description="Gadget para noticias" author="Carlos Medina Gallego/c.medina.gallego@bbva.com"/>
+  <UserPref name="titulo1" display_name="1: Noticia" required="true"/>
+  <UserPref name="fecha1" display_name="1: Fecha (dd-mmm hh:mm)" required="false"/>
+  <UserPref name="url1" display_name="1: URL" required="false"/>
+  <UserPref name="targ1" display_name="1: Ventana nueva?" datatype="bool" default_value="false"/>
+  <UserPref name="color1" display_name="1: Color (#xxxxxx)" required="false" default_value="#009EE5"/>
+  <UserPref name="fondo1" display_name="1: Fondo (#xxxxxx)" required="false" default_value="#FFFFFF"/>
+  <UserPref name="tam1" display_name="1: Tamaño fuente" required="false" default_value="10"/>
+  <UserPref name="titulo2" display_name="2: Noticia" required="true"/>
+  <UserPref name="fecha2" display_name="2: Fecha (dd-mmm hh:mm)" required="false"/>
+  <UserPref name="url2" display_name="2: URL" required="false"/>
+  <UserPref name="targ2" display_name="2: Ventana nueva?" datatype="bool" default_value="false"/>
+  <UserPref name="color2" display_name="2: Color (#xxxxxx)" required="false" default_value="#009EE5"/>
+  <UserPref name="fondo2" display_name="2: Fondo (#xxxxxx)" required="false" default_value="#FFFFFF"/>
+  <UserPref name="tam2" display_name="2: Tamaño fuente" required="false" default_value="10"/>
+  <UserPref name="titulo3" display_name="3: Noticia" required="true"/>
+  <UserPref name="fecha3" display_name="3: Fecha (dd-mmm hh:mm)" required="false"/>
+  <UserPref name="url3" display_name="3: URL" required="false"/>
+  <UserPref name="targ3" display_name="3: Ventana nueva?" datatype="bool" default_value="false"/>
+  <UserPref name="color3" display_name="3: Color (#xxxxxx)" required="false" default_value="#009EE5"/>
+  <UserPref name="fondo3" display_name="3: Fondo (#xxxxxx)" required="false" default_value="#FFFFFF"/>
+  <UserPref name="tam3" display_name="3: Tamaño fuente" required="false" default_value="10"/>
+  <UserPref name="speed" display_name="Velocidad" required="true" default_value="3000"/>
+  <Content type="html">
+    <![CDATA[
+    <script type="text/javascript"> 
+      var prefs = new _IG_Prefs(__MODULE_ID__); 
+      var intervalo = prefs.getString("speed"); 
 
+      var titulo1 = prefs.getString("titulo1"); 
+      var url1 = prefs.getString("url1"); 
+      var targ1 = (prefs.getBool("targ1") == true);
+      var fecha1 = prefs.getString("fecha1"); 
+      var color1 = prefs.getString("color1"); 
+      var fondo1 = prefs.getString("fondo1"); 
+      var tam1 = prefs.getString("tam1"); 
+      //--
+      var titulo2 = prefs.getString("titulo2"); 
+      var url2 = prefs.getString("url2"); 
+      var targ2 = (prefs.getBool("targ2") == true);
+      var fecha2 = prefs.getString("fecha2"); 
+      var color2 = prefs.getString("color2"); 
+      var fondo2 = prefs.getString("fondo2"); 
+      var tam2 = prefs.getString("tam2"); 
+      //--
+      var titulo3 = prefs.getString("titulo3"); 
+      var url3 = prefs.getString("url3"); 
+      var targ3 = (prefs.getBool("targ3") == true);
+      var fecha3 = prefs.getString("fecha3"); 
+      var color3 = prefs.getString("color3"); 
+      var fondo3 = prefs.getString("fondo3"); 
+      var tam3 = prefs.getString("tam3"); 
+
+      var mensajes = new Array();
+    if (titulo1 != "") mensajes.push ([titulo1,url1,targ1,color1,fondo1,tam1,fecha1]);
+    if (titulo2 != "") mensajes.push ([titulo2,url2,targ2,color2,fondo2,tam2,fecha2]);
+    if (titulo3 != "") mensajes.push ([titulo3,url3,targ3,color3,fondo3,tam3,fecha3]);
+    
+      var turno = 0;
+  
+      function rotarMensajes () {
+        var font = mensajes[turno][5];
+        if (font == "") font = "10";
+        font += "pt";
+        var panel = document.getElementById('anuncio');
+        var fondo = document.getElementById('fondo');
+        var span = 
+             ((mensajes[turno][6]!="")?"<span style='color:#666666;font-size:8pt'>" + mensajes[turno][6] + " | <span>":"")
+           + "<span style='color:" + mensajes[turno][3] + ";font-size:" + font + ";font-weight:bold'>" + mensajes[turno][0] + "</span>";
+        panel.innerHTML = 
+          ((mensajes[turno][1]!="")?"<a style='text-decoration:none;' href='" + mensajes[turno][1] + "' target=" + ((mensajes[turno][2])?"_blank":"_top") + ">" + span + "</a>":span);
+        fondo.style.backgroundColor = mensajes[turno][4];
+        turno++;
+        if (turno == mensajes.length) turno = 0;
+      }
+
+      function makeDOMRequest() { 
+        var params = {}; 
+        params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM; 
+        var url = "http://hosting.gmodules.com/ig/gadgets/file/104207384113331112007/banner.xml"; 
+        gadgets.io.makeRequest(url, response, params); 
+      }; 
+      
+      function response(obj) {
+        setInterval('rotarMensajes()',intervalo);
+        rotarMensajes();
+      }
+      gadgets.util.registerOnLoadHandler(makeDOMRequest); 
+    </script>
+  <div id="fondo" style="width:100%;height:100%;;font-family:arial;">
+     <table style="width:100%;height:100%;vertical-align:middle;">
+        <tr style="height:100%;">
+         <td style="width:100%;height:100%;vertical-align:middle;padding:0 0.5em 0 0.5em" id="anuncio">
+         </td>
+        </tr>
+     </table>
+    </div>
+    ]]>
+  </Content>
+</Module>
